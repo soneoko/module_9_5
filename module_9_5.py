@@ -8,25 +8,21 @@ class Iterator:
         self.step = step
 
     def __iter__(self):
-        self.pointer = self.start - self.step
+        if self.step == 0:
+            raise StepValueError
+        self.pointer = self.start
         return self
 
     def __next__(self):
-        if self.step == 0:
-            raise StepValueError
-        elif self.step < 0:
-            if self.pointer > self.stop and self.pointer + self.step > self.stop:
-                self.pointer += self.step
-            else:
-                raise StopIteration
-        elif self.step > 0:
-            if self.pointer < self.stop and self.pointer + self.step < self.stop:
-                self.pointer += self.step
-            else:
+        if self.step > 0:
+            if self.pointer > self.stop:
                 raise StopIteration
         else:
-            raise StepValueError
-        return self.pointer
+            if self.pointer < self.stop:
+                raise StopIteration
+        x = self.pointer
+        self.pointer += self.step
+        return x
 
 
 iter1 = Iterator(100, 200, 0)
